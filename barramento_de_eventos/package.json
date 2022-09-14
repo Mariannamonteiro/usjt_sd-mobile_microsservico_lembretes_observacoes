@@ -1,5 +1,5 @@
 {
-  "name": "observacoes",
+  "name": "barramento_de_eventos",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,10 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
+    "cors": "^2.8.5",
     "express": "^4.18.1",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
     "nodemon": "^2.0.19"
   }
 }
