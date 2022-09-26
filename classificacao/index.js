@@ -9,15 +9,17 @@ const funcoes = {
         observacao.status = 
             observacao.texto.includes(palavraChave)
             ? "importante" : "comum";
+            console.log(observacao)
         axios.post("http://localhost:10000/eventos",{
             tipo: "ObservacaoClassificada",
             dados: observacao
         })    
     }
 }
-
 app.post('/eventos', (req, res) =>{
-    funcoes[req.body.tipo](req.body.dados);
+    try{
+        funcoes[req.body.tipo](req.body.dados);
+    }catch(ex){}
     res.status(200).send({msg: "ok"})
 })
 

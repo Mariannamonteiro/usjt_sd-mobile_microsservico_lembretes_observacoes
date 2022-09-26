@@ -28,8 +28,7 @@ app.post('/lembretes', async (req, res) => {
       contador,
       texto,
     },
-  });
-
+  });  
   res.status(201).send(lembretes[contador]);
 })
 

@@ -7,14 +7,13 @@ const axios = require('axios');
 app.use(express.json())
 
 const {v4 : uuidv4} = require('uuid');
-
 const observacoesPorLembreteId = {};
 
 const funcoes = {
     ObservacaoClassificada: (observacao) => {
         const observacoes = 
             observacoesPorLembreteId[observacao.lembreteId]
-        const obsParaAtualizar = observacoes.find(o => o.id === observacao.id)    
+        let obsParaAtualizar = observacoes.find(o => o.id === observacao.id)    
         obsParaAtualizar = observacao.status;
         axios.post("http://localhost:10000/eventos", {
             tipo:"ObservacaoAtualizada",
@@ -24,7 +23,7 @@ const funcoes = {
                 lembreteId: observacao.lembreteId,
                 status: observacao.status
 
-            }
+            }            
         })
     }
 }
@@ -37,7 +36,8 @@ app.post('/lembretes/:id/observacoes', async (req, res) => {
     //req.params dá acesso à lista de parâmetros da URL
     const observacoesDoLembrete = 
         observacoesPorLembreteId[req.params.id] || [];
-    observacoesDoLembrete.push({id: idObs, texto});
+     const observacao = {id: idObs,texto, lembreteId:req.params.id,status: 'aguardando'}
+    observacoesDoLembrete.push(observacao);
     observacoesPorLembreteId[req.params.id] = observacoesDoLembrete;
     await axios.post('http://localhost:10000/eventos', {
         tipo: 'ObservacaoCriada',
@@ -57,7 +57,9 @@ app.get('/lembretes/:id/observacoes', (req, res) => {
 })
 
 app.post('/eventos', (req, res) => {
-    funcoes[req.body.tipo](req.body.dados);
+    try{
+        funcoes[req.body.tipo](req.body.dados);
+    }catch(ex){}
     res.status(200).send({msg: 'ok'});
   })
   

@@ -6,6 +6,7 @@ const app = express()
 app.use(express.json())
 const baseConsulta = {}
 
+
 const funcoes = {
     LembreteCriado: (lembrete) => {
       baseConsulta[lembrete.contador] = lembrete
@@ -14,6 +15,11 @@ const funcoes = {
       const observacoes = baseConsulta[observacao.lembreteId]['observacoes'] || []
       observacoes.push(observacao)
       baseConsulta[observacao.lembreteId]['observacoes'] = observacoes
+    },
+    ObservacaoAtualizada: (observacao) => {
+        const observacoes = baseConsulta[observacao.lembreteId]['observacoes']
+        const indice = observacoes.findIndex(o => o.id === observacao.id)
+        observacoes[indice] = observacao
     }
   }
   
@@ -24,8 +30,11 @@ const funcoes = {
   
   //localhost:6000/eventos
   app.post('/eventos', (req, res) => {
-    funcoes[req.body.tipo](req.body.dados);
+    try{
+        funcoes[req.body.tipo](req.body.dados);
+    }catch(ex){}
     res.status(200).send(baseConsulta);
+    
   })
   
   app.listen('6000', () => console.log('Consultas. Porta 6000.'))
