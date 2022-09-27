@@ -1,4 +1,5 @@
 const express = require('express')
+const axios = require('axios')
 const app = express()
 // transforma o texto string em um objeto JSON
 //const bodyParser = require('body-parser')
@@ -37,4 +38,16 @@ const funcoes = {
     
   })
   
-  app.listen('6000', () => console.log('Consultas. Porta 6000.'))
+  app.listen('6000', async () => {
+    console.log('Consultas. Porta 6000.')
+    try{
+        const resp = await axios.get('http://localhost:10000/eventos')
+        resp.data.forEach((valor, indice, colecao) =>{
+            try{
+                funcoes[valor.tipo](valor.dados)
+            }catch(e){}
+        })
+
+    }catch(e){}
+
+  })
